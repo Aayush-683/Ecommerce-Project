@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/om-aroraa/Garv/issues"
   },
-  "homepage": "https://github.com/om-aroraa/Garv#readme"
+  "homepage": "https://github.com/om-aroraa/Garv#readme",
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.3",
+    "express-session": "^1.18.0",
+    "quick.db": "^9.1.7"
+  }
 }
