@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .sidebar {
+            flex: 0 0 25%;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-right: 1px solid #ddd;
+        }
+
+        .content {
+            flex: 0 0 75%;
+            padding: 20px;
+        }
+
+        /* Filter Container Styles */
+        .filter-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .filter-container h2 {
+            margin-bottom: 10px;
+            font-size: 20px;
+            color: #1C768F;
+        }
+
+        .filter {
+            margin-bottom: 15px;
+        }
+
+        .filter label {
+            display: block;
+            margin-bottom: 5px;
+            color: #032539;
+        }
+
+        .filter select,
+        .filter input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .filter input[type="range"] {
+            -webkit-appearance: none;
+            width: calc(100% - 20px);
+            margin-top: 5px;
+        }
+
+        .filter input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #FA991C;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .filter input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #FA991C;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .filter input[type="range"]::-webkit-slider-runnable-track {
+            height: 5px;
+            background: #1C768F;
+            border-radius: 5px;
+        }
+
+        .filter input[type="range"]::-moz-range-track {
+            height: 5px;
+            background: #1C768F;
+            border-radius: 5px;
+        }
+
+        #price-value {
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+        .apply-btn {
+            background-color: #FA991C;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .apply-btn:hover {
+            background-color: #1C768F;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="filter-container">
+                <h2>Filter Options</h2>
+                <div class="filter">
+                    <label for="category">Category:</label>
+                    <select id="category">
+                        <option value="all">All</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="home">Home & Kitchen</option>
+                    </select>
+                </div>
+                <div class="filter">
+                    <label for="price-range">Price Range:</label>
+                    <input type="range" id="price-range" min="0" max="1000" value="500">
+                    <span id="price-value">$500</span>
+                </div>
+                <div class="filter">
+                    <label for="sort-by">Sort By:</label>
+                    <select id="sort-by">
+                        <option value="popularity">Popularity</option>
+                        <option value="price-low-to-high">Price Low to High</option>
+                        <option value="price-high-to-low">Price High to Low</option>
+                        <option value="newest">Newest Arrivals</option>
+                    </select>
+                </div>
+                <button class="apply-btn">Apply Filters</button>
+            </div>
+        </div>
+        <div class="content">
+            <!-- Product Listings -->
+            <!-- Add your product listings here -->
+        </div>
+    </div>
+</body>
+
+</html>

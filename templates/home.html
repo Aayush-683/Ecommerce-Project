@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Website</title>
+    <link rel="stylesheet" href="/public/css/home.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="container">
+            <div class="user-info">
+                <span>Welcome, Username</span>
+                <span>Your Location</span>
+            </div>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="#">Stores</a>
+                <a href="#">Cart</a>
+                <a href="#">Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slider -->
+    <div class="slider">
+        <div class="slides">
+            <div class="slide">
+                <img src="/public/images/slider1.jpg" alt="Slide 1">
+                <div class="slide-text">Text for Slide 1</div>
+            </div>
+            <div class="slide">
+                <img src="/public/images/slider2.jpg" alt="Slide 2">
+                <div class="slide-text">Text for Slide 2</div>
+            </div>
+            <div class="slide">
+                <img src="/public/images/slider3.jpg" alt="Slide 3">
+                <div class="slide-text">Text for Slide 3</div>
+            </div>
+        </div>
+        <span class="prev" onclick="prevSlide()">&#10094;</span>
+        <span class="next" onclick="nextSlide()">&#10095;</span>
+    </div>
+    <!-- Banner -->
+    <div class="banner">
+        <h2>Featured Products</h2>
+        <p>Check out our latest and greatest products!</p>
+    </div>
+
+
+
+    <!-- Stores Section -->
+    <div class="stores">
+        <!-- Sample Store Cards -->
+            <div class="store" onclick="openOverlay('Store Name 1', 'Location 1')">
+                <h3>Store Name 1</h3>
+                <img src="/public/images/slider1.jpg" alt="">
+                <p>Location: Store Location 1</p>
+                <!-- Additional Store Details and Products -->
+            </div>
+        <a href="">
+            <div class="store">
+                <h3>Store Name 2</h3>
+                <img src="/public/images/slider2.jpg" alt="">
+                <p>Location: Store Location 2</p>
+                <!-- Additional Store Details and Products -->
+            </div>
+        </a>
+        <a href="">
+            <div class="store">
+                <h3>Store Name 3</h3>
+                <img src="/public/images/slider3.jpg" alt="">
+                <p>Location: Store Location 3</p>
+                <!-- Additional Store Details and Products -->
+            </div>
+        </a>
+    </div>
+<div id="overlay" class="overlay" onclick="closeOverlay()">
+    <div class="overlay-content">
+        <span class="close-btn">&times;</span>
+        <h2 id="store-name"></h2>
+        <p id="store-location"></p>
+        <!-- Additional Store Details and Products -->
+        <!-- You can dynamically add content here using JavaScript -->
+    </div>
+</div>
+    <script>
+        function openOverlay(name, location) {
+                document.getElementById('store-name').innerText = name;
+                document.getElementById('store-location').innerText = "Location: " + location;
+                document.getElementById('overlay').style.display = "block";
+            }
+
+            function closeOverlay() {
+                document.getElementById('overlay').style.display = "none";
+            }
+
+            // Close overlay when clicking close button
+            document.querySelector('.close-btn').addEventListener('click', closeOverlay);
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlide(n) {
+            slides.forEach(slide => {
+                slide.style.transform = `translateX(-${n * 100}%)`;
+            });
+            currentSlide = n;
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                showSlide(currentSlide + 1);
+            } else {
+                showSlide(0);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            } else {
+                showSlide(slides.length - 1);
+            }
+        }
+
+        // Auto slide change every 4 seconds
+        setInterval(nextSlide, 4000);
+    </script>
+</body>
+
+</html>
