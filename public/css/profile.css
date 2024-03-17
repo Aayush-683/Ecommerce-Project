@@ -36,7 +36,7 @@ body {
 }
 
 .navbar a:hover {
-    color: #FA991C;
+    color: var(--accent-color);
 }
 
 /* Profile container */
