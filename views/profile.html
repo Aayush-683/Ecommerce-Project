@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/public/css/profile.css">
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="container">
+            <div class="user-info">
+                <span>Welcome, Username</span>
+                <span>Your Location</span>
+            </div>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="/overlay.html">Stores</a>
+                <a href="#">Cart</a>
+                <a href="#">Profile</a>
+                <a href="#">Manage Store </a>
+                <a href="#">Manage User</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-profile">
+        <div class="sidebar-profile">
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="#" onclick="showDashboard()">Dashboard</a></li>
+                <li><a href="#" onclick="showOrders()">Orders</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </div>
+        <div class="profile" id="dashboard">
+            <h1>Dashboard</h1>
+            <div id="userDetails">
+                <h2>User Details</h2>
+                <p><strong>Username:</strong> JohnDoe</p>
+                <p><strong>Email:</strong> johndoe@example.com</p>
+                <p><strong>Address:</strong> 123 Main St, Cityville, Country</p>
+                <p><strong>Phone:</strong> 123-456-7890</p>
+            </div>
+            <button onclick="editProfile()">Edit Profile</button>
+            <div id="editForm" style="display: none;">
+                <h2>Edit Profile</h2>
+                <form>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="JohnDoe"><br><br>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="johndoe@example.com"><br><br>
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" value="123 Main St, Cityville, Country"><br><br>
+                    <label for="phone">Phone:</label>
+                    <input type="tel" id="phone" name="phone" value="123-456-7890"><br><br>
+                    <input type="submit" value="Save">
+                </form>
+            </div>
+        </div>
+        <div class="profile" id="orders" style="display: none;">
+            <h1>Orders</h1>
+            <div class="order">
+                <h2>Order #001</h2>
+                <p><strong>Date:</strong> January 15, 2024</p>
+                <p><strong>Items:</strong> Product A, Product B, Product C</p>
+                <p><strong>Total:</strong> $100.00</p>
+                <p><strong>Store:</strong> Store Name</p>
+                <p><strong>Status:</strong> Delivered</p>
+            </div>
+            <div class="order">
+                <h2>Order #002</h2>
+                <p><strong>Date:</strong> February 3, 2024</p>
+                <p><strong>Items:</strong> Product D, Product E</p>
+                <p><strong>Total:</strong> $50.00</p>
+                <p><strong>Store:</strong> Store Name</p>
+                <p><strong>Status:</strong> Processing</p>
+            </div>
+            <!-- Add more orders as needed -->
+        </div>
+
+
+        <div class="profile" id="logout" style="display: none;">
+            <h1>Logout</h1>
+            <p>Are you sure you want to logout? Click here to logout from your account.</p>
+        </div>
+    </div>
+
+    <script>
+        function showDashboard() {
+            hideAll();
+            document.getElementById('dashboard').style.display = 'block';
+        }
+
+        function showOrders() {
+            hideAll();
+            document.getElementById('orders').style.display = 'block';
+        }
+
+
+        function logout() {
+            hideAll();
+            document.getElementById('logout').style.display = 'block';
+        }
+
+        function hideAll() {
+            var profiles = document.getElementsByClassName('profile');
+            for (var i = 0; i < profiles.length; i++) {
+                profiles[i].style.display = 'none';
+            }
+        }
+
+        function editProfile() {
+            var editForm = document.getElementById('editForm');
+            editForm.style.display = 'block';
+            var userDetails = document.getElementById('userDetails');
+            userDetails.style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

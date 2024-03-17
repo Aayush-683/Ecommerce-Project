@@ -1,0 +1,120 @@
+/* Define colors */
+:root {
+    --primary-color: #FA991C;
+    --secondary-color: #FBF3F2;
+    --accent-color: #1C768F;
+    --dark-color: #032539;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--secondary-color);
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: var(--secondary-color);
+    padding: 10px 20px;
+    transition: color 0.3s ease;
+    
+}
+
+.navbar a:hover {
+    color: #FA991C;
+}
+
+/* Profile container */
+.container-profile {
+    display: flex;
+    max-width: 90%;
+    height: 100%;
+    margin: 20px auto;
+}
+
+/* Sidebar */
+.sidebar-profile {
+    flex: 1;
+    background: #fff;
+    padding: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-profile h2 {
+    margin-bottom: 20px;
+    color: var(--accent-color);
+}
+
+.sidebar-profile ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar-profile li {
+    margin-bottom: 10px;
+}
+
+.sidebar-profile a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.sidebar-profile a:hover {
+    color: var(--primary-color);
+}
+
+/* Profile section */
+.profile {
+    flex: 2;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.profile h1 {
+    margin-bottom: 20px;
+}
+
+/* Profile info */
+.profile-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.profile-info .info {
+    margin-bottom: 10px;
+}
+
+/* Buttons */
+button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #032539;
+}
