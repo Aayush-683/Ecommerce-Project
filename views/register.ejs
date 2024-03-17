@@ -25,8 +25,8 @@
           pattern="[a-zA-Z0-9]+"
           required
         />
-        <input type="text" name="contact" placeholder="Contact" required />
-        <input type="email" name="email" placeholder="Email" required />
+        <input type="number" name="contact" placeholder="Contact" required pattern="[0-9]{10}" />
+        <input type="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
         <input
           type="text"
           name="coordinates"

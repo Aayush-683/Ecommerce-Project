@@ -5,7 +5,7 @@ const { QuickDB } = require('quick.db');
 const db = new QuickDB({
     filePath: './database.sqlite'
 });
-const port = 3000;
+const port = 5000;
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -60,12 +60,13 @@ app.post('/login', async (req, res) => {
             let check = await db.get(`users.${username}`);
             if (check && check.password === password) {
                 req.session.username = username;
-                if (check.accountType === 'admin') {
+                req.session.coords = check.coordinates;
+                if (check.accountType == 'admin') {
                     req.session.admin = true;
                 } else {
                     req.session.admin = false;
                 }
-                if (check.accountType === 'seller') {
+                if (check.accountType == 'seller') {
                     req.session.seller = true;
                 } else {
                     req.session.seller = false;
@@ -144,43 +145,70 @@ app.get('/stores', async (req, res) => {
     let stores = await db.get('stores') || [
         {
             name: 'Store 1',
+            seller: 'seller1',
             coordinates: '1,1',
             products: [
                 {
+                    id: 1,
                     name: 'Product 1',
-                    price: 100
+                    price: 100,
+                    store: 'Store 1',
+                    description: 'Description 1',
+                    image: 'https://via.placeholder.com/150'
                 },
                 {
+                    id: 2,
                     name: 'Product 2',
-                    price: 200
+                    price: 200,
+                    store: 'Store 1',
+                    description: 'Description 2',
+                    image: 'https://via.placeholder.com/150'
                 }
             ]
         },
         {
             name: 'Store 2',
+            seller: 'seller2',
             coordinates: '2,2',
             products: [
                 {
+                    id: 1,
                     name: 'Product 1',
-                    price: 100
+                    price: 100,
+                    store: 'Store 2',
+                    description: 'Description 1',
+                    image: 'https://via.placeholder.com/150'
                 },
                 {
+                    id: 2,
                     name: 'Product 2',
-                    price: 200
+                    price: 200,
+                    store: 'Store 2',
+                    description: 'Description 2',
+                    image: 'https://via.placeholder.com/150'
                 }
             ]
         },
         {
             name: 'Store 3',
+            seller: 'seller3',
             coordinates: '3,3',
             products: [
                 {
+                    id: 1,
                     name: 'Product 1',
-                    price: 100
+                    price: 100,
+                    store: 'Store 3',
+                    description: 'Description 1',
+                    image: 'https://via.placeholder.com/150'
                 },
                 {
+                    id: 2,
                     name: 'Product 2',
-                    price: 200
+                    price: 200,
+                    store: 'Store 3',
+                    description: 'Description 2',
+                    image: 'https://via.placeholder.com/150'
                 }
             ]
         }
@@ -236,6 +264,250 @@ app.get('/stores', async (req, res) => {
         });
     }
     res.render('stores', { stores, sortBy, distance, req: req });
+});
+
+app.get('/profile', async (req, res) => {
+    let username = req.session.username;
+    if (username) {
+        let user = await db.get(`users.${username}`);
+        let orders = await db.get(`orders.${username}`) || [
+            {
+                store: 'Store 1',
+                date: '2021-01-01',
+                products: ["Product 1", "Product 2"],
+                total: 400
+            },
+            {
+                store: 'Store 2',
+                date: '2021-01-02',
+                products: ["Product 1", "Product 2"],
+                total: 400
+            }
+        ];
+        res.render('profile', { user, req: req, orders });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+app.post('/editProfile', async (req, res) => {
+    let username = req.session.username;
+    if (username) {
+        let { contact, email, coordinates, password } = req.body;
+        let user = await db.get(`users.${username}`);
+        if (user) {
+            let newUser = { ...user, contact, email, coordinates, password };
+            await db.set(`users.${username}`, newUser);
+        }
+        res.redirect('/profile');
+    } else {
+        res.status(403).send('Forbidden');
+    }
+});
+
+app.get('/manage', async (req, res) => {
+    let username = req.session.username;
+    if (username) {
+        let user = await db.get(`users.${username}`);
+        let success = req.query.success || false;
+        let error = req.query.error || false;
+        let msg = false;
+        if (success) {
+            msg = 'Operation successful';
+        } else if (error) {
+            switch (error) {
+                case '1':
+                    msg = 'Store with that ID already exists';
+                    break;
+                case '2':
+                    msg = 'Product with that ID already exists';
+                    break;
+                case '3':
+                    msg = 'Profile with that Username already exists';
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (user.accountType === 'admin') {
+            let stores = await db.get('stores') || [];
+            res.render('manage', { stores, req: req, msg });
+        } else if (user.accountType === 'seller') {
+            let stores = await db.get('stores') || [];
+            stores = stores.filter(store => store.seller === username);
+            res.render('manage', { stores, req: req, msg });
+        } else {
+            res.status(403).send('Forbidden');
+        }
+    } else {
+        res.redirect('/login');
+    }
+});
+
+app.post('/addStore', async (req, res) => {
+    let username = req.session.username;
+    if (username) {
+        if (!req.session.admin && !req.session.seller) {
+            res.status(403).send('Forbidden');
+        }
+        let { name, coordinates, id, url } = req.body;
+        let stores = await db.get('stores') || [];
+        let check = stores.find(s => s.id === id);
+        if (check) {
+            return res.redirect('/manage?error=1');
+        }
+        let store = { name, seller: username, coordinates, id, url, products: [] };
+        await db.push('stores', store);
+        res.redirect('/manage?success=1');
+    } else {
+        res.status(403).send('Forbidden');
+    }
+});
+
+app.post('/addProduct', async (req, res) => {
+    let username = req.session.username;
+    if (username) {
+        if (!req.session.seller && !req.session.admin) {
+            res.status(403).send('Forbidden');
+        }
+        let { store_id, product_id, product_name, product_description, product_price, product_image } = req.body;
+        let stores = await db.get('stores') || [];
+        let check = stores.find(s => s.id === store_id);
+        if (!check) {
+            return res.redirect('/manage?error=1');
+        }
+        let check2 = check.products.find(p => p.id === product_id);
+        if (check2) {
+            return res.redirect('/manage?error=2');
+        }
+        let product = { store: store_id, id: product_id, name: product_name, description: product_description, price: product_price, image: product_image };
+        check.products.push(product);
+        await db.set('stores', stores);
+        res.redirect('/manage?success=1');
+    } else {
+        res.status(403).send('Forbidden');
+    }
+});
+
+app.post('/removeStore', async (req, res) => {
+    let username = req.session.username;
+    if (username) {
+        if (!req.session.seller && !req.session.admin) {
+            res.status(403).send('Forbidden');
+        }
+        let store = req.body.store;
+        let stores = await db.get('stores') || [];
+        let check = stores.find(s => s.name === store);
+        if (check.seller === username || req.session.admin) {
+            stores = stores.filter(s => s.name !== store);
+            await db.set('stores', stores);
+            res.redirect('/manage?success=1');
+        } else {
+            res.status(403).send('Forbidden');
+        }
+    } else {
+        res.status(403).send('Forbidden');
+    }
+});
+
+app.post('/removeProduct', async (req, res) => {
+    let username = req.session.username;
+    if (username) {
+        if (!req.session.seller && !req.session.admin) {
+            res.status(403).send('Forbidden');
+        }
+        let { store, product } = req.body;
+        let stores = await db.get('stores') || [];
+        let check = stores.find(s => s.name === store);
+        if (check.seller === username || req.session.admin) {
+            check.products = check.products.filter(p => p.name !== product);
+            await db.set('stores', stores);
+            res.redirect('/manage?success=1');
+        } else {
+            res.status(403).send('Forbidden');
+        }
+    } else {
+        res.status(403).send('Forbidden');
+    }
+});
+
+app.post('/addProfile', async (req, res) => {
+    if (!req.session.admin) return res.status(403).send('Forbidden');
+    let { username, contact, email, coordinates, password } = req.body;
+    let check = await db.get(`users.${username}`);
+    if (check) {
+        return res.redirect('/manage?error=3');
+    }
+    await db.set(`users.${username}`, { contact, email, coordinates, password });
+    res.redirect('/manage?success=1');
+});
+
+app.post('/removeProfile', async (req, res) => {
+    if (!req.session.admin) return res.status(403).send('Forbidden');
+    let username = req.body.username;
+    let check = await db.get(`users.${username}`);
+    if (check) {
+        await db.delete(`users.${username}`);
+    }
+    res.redirect('/manage?success=1');
+});
+
+app.get('/product/:id', async (req, res) => {
+    let id = req.params.id;
+    let error = req.query.error || false;
+    let success = req.query.success || false;
+    let stores = await db.get('stores') || [];
+    await new Promise((resolve, reject) => {
+        for (let store of stores) {
+            let product = store.products.find(p => p.id === id);
+            if (product) {
+                return res.render('product', { store, req: req, product, error, success });
+            }
+        }
+        res.status(404).send('Not found');
+    });
+    res.redirect('/stores');
+});
+
+app.get('/cart', async (req, res) => {
+    let username = req.session.username;
+    if (username) {
+        let cart = await db.get(`cart.${username}`) || [];
+        res.render('cart', { cart, req: req });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+app.post('/cart', async (req, res) => {
+    let username = req.session.username;
+    if (username) {
+        let { store, productId, buyNow } = req.body;
+        let cart = await db.get(`cart.${username}`) || [];
+        // Check if product is from the same store
+        let check = cart[0] ? cart[0].store === store : true;
+        if (!check) {
+            return res.redirect(`/product/${productId}?error=1`);
+        } else {
+            // Check if product is already in cart
+            let check2 = cart.find(p => p.productId === productId);
+            let quantity = 1;
+            if (check2) {
+                quantity = check2.quantity + 1;
+                cart = cart.filter(p => p.productId !== productId);
+            }
+            let product = { productId, quantity };
+            cart.push(product);
+            await db.set(`cart.${username}`, cart);
+            if (buyNow == 'true') {
+                res.redirect('/checkout');
+            } else {
+                res.redirect(`/prodcut/${productId}?success=1`);
+            }
+        }
+    } else {
+        res.redirect('/login');
+    }
 });
 
 app.listen(port, () => {

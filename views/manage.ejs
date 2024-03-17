@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage</title>
+    <link rel="stylesheet" href="/css/profile.css">
+</head>
+
+<body>
+
+    <%- include('partials/nav') %>
+
+    <div class="container-profile">
+        <div class="sidebar-profile">
+            <h2>Manage Profile</h2>
+            <ul>
+                <li><a onclick="addStore()">Add Store</a></li>
+                <li><a onclick="viewStore()">View Store</a></li>
+                <li><a onclick="removeStore()">Remove Store</a></li>
+                <li><a onclick="addProduct()">Add Product</a></li>
+                <li><a onclick="removeProduct()">Remove Product</a></li>
+                <% if (req.session.admin) { %>
+                    <li><a onclick="addUser()">Add User</a></li>
+                    <li><a onclick="removeUser()">Remove User</a></li>
+                <% } %>
+            </ul>
+        </div>
+        <div class="profile" id="addStore">
+            <h1>Add Store</h1><hr>
+            <% if (msg) { %>
+                <p style="color: red;"><%= msg %></p>
+            <% } %>
+            <div id="editForm">
+                <form action="/addStore" method="post">
+                    <label for="store_name">Store Name:</label>
+                    <input type="store_id" id="store_name" name="name" value="MyStore" required><br><br>
+                    <label for="email">Store ID:</label>
+                    <input type="text" id="store_name" name="id" value="xyz123" pattern="[a-zA-Z0-9]+" required><br><br>
+                    <label for="coordinates">Coordinates:</label>
+                    <input type="text" id="coordinates" name="coordinates" value="10,10" pattern="[0-9]+,[0-9]+" required><br><br>
+                    <label for="url">Image URL:</label>
+                    <input type="url" id="url" name="url" value="https://google.com/image.jpg" pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)(.jpg|.png|.gif)" required><br><br>
+                    <input type="submit" value="Save">
+                </form>
+            </div>
+        </div>
+
+        <div class="profile" id="viewStore" style="display: none;">
+            <h1>View Store</h1><hr>
+            <div class="store">
+                <h2>Store #001</h2>
+                <p><strong>Store Name:</strong> Store Name</p>
+                <p><strong>Store ID:</strong> 001</p>
+                <p><strong>Coordinates:</strong> 123 Main St, Cityville, Country</p>
+                <p><strong>Image URL:</strong> URL</p>
+            </div>
+            <% for (let i = 0; i < stores.length; i++) { %>
+                <div class="store">
+                    <h2>Store #<%= stores[i].id %></h2>
+                    <p><strong>Store Name:</strong> <%= stores[i].name %></p>
+                    <p><strong>Store ID:</strong> <%= stores[i].id %></p>
+                    <p><strong>Coordinates:</strong> <%= stores[i].coordinates %></p>
+                    <p><strong>Image URL:</strong> <%= stores[i].url %></p>
+                </div>
+            <% } %>
+            <!-- Add more stores as needed -->
+        </div>
+
+        <div class="profile" id="removeStore" style="display: none;">
+            <h1>Remove Store</h1><hr>
+            <form action="/removeStore" method="post">
+                <label for="store_id">Store ID:</label>
+                <input type="text" id="store_id" name="store_id" value="xyz123" required><br><br>
+                <input type="submit" value="Remove">
+            </form>
+        </div>
+
+        <div class="profile" id="addProduct" style="display: none;">
+            <h1>Add Product</h1><hr>
+            <form action="/addProduct" method="post">
+                <label for="store_id">Store ID:</label>
+                <input type="text" id="store_id" name="store_id" value="xyz123" pattern="[a-zA-Z0-9]+" required><br><br>
+                <label for="product_name">Product Name:</label>
+                <input type="text" id="product_name" name="product_name" value="MyProduct" pattern="[a-zA-Z0-9]+" required><br><br>
+                <label for="product_id">Product ID:</label>
+                <input type="text" id="product_id" name="product_id" value="prod123" pattern="[a-zA-Z0-9]+" required><br><br>
+                <label for="product_price">Product Description:</label>
+                <textarea id="product_description" name="product_description" value="awesome product" required></textarea><br><br>
+                <label for="product_price">Product Price:</label>
+                $<input type="number" id="product_price" name="product_price" value="1000" required><br><br>
+                <label for="product_image">Product Image URL:</label>
+                <input type="url" id="product_image" name="product_image" value="https://google.com/productImage.jpg" pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)(.jpg|.png|.gif)" required><br><br>
+                <input type="submit" value="Add">
+            </form>
+        </div>
+
+        <div class="profile" id="removeProduct" style="display: none;">
+            <h1>Remove Product</h1><hr>
+            <form action="/removeProduct" method="post">
+                <label for="product_id">Product ID:</label>
+                <input type="text" id="product_id" name="product_id" value="prod123"><br><br>
+                <input type="submit" value="Remove">
+            </form>
+        </div>
+
+        <div class="profile" id="addUser" style="display: none;">
+            <h1>Add User</h1><hr>
+            <form action="/addProfile" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="" pattern="[a-zA-Z0-9]+" required><br><br>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required><br><br>
+                <label for="type">Account Type :</label>
+                <select name="accountType" required>
+                    <option value="" disabled selected>Select Account Type</option>
+                    <option value="customer">Customer</option>
+                    <option value="seller">Seller</option>
+                </select><br><br>
+                <label for="coordinates">Coordinates:</label>
+                <input type="text" id="coordinates" name="coordinates" value="" pattern="[0-9]+,[0-9]+" required><br><br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" value="" required><br><br>
+                <input type="submit" value="Add">
+            </form>
+        </div>
+
+        <div class="profile" id="removeUser" style="display: none;">
+            <h1>Remove User</h1><hr>
+            <form action="/removeProfile" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="" required><br><br>
+                <input type="submit" value="Remove">
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        function addStore() {
+            hideAll();
+            document.getElementById('addStore').style.display = 'block';
+        }
+
+        function viewStore() {
+            hideAll();
+            document.getElementById('viewStore').style.display = 'block';
+        }
+
+        function removeStore() {
+            hideAll();
+            document.getElementById('removeStore').style.display = 'block';
+        }
+
+        function addProduct() {
+            hideAll();
+            document.getElementById('addProduct').style.display = 'block';
+        }
+
+        function removeProduct() {
+            hideAll();
+            document.getElementById('removeProduct').style.display = 'block';
+        }
+
+        function addUser() {
+            hideAll();
+            document.getElementById('addUser').style.display = 'block';
+        }
+
+        function removeUser() {
+            hideAll();
+            document.getElementById('removeUser').style.display = 'block';
+        }
+
+        function hideAll() {
+            var profiles = document.getElementsByClassName('profile');
+            for (var i = 0; i < profiles.length; i++) {
+                profiles[i].style.display = 'none';
+            }
+        }
+
+    </script>
+</body>
+
+</html>

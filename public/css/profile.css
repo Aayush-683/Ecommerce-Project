@@ -105,7 +105,7 @@ body {
 }
 
 /* Buttons */
-input[type="submit" i]{
+button {
     background-color: var(--primary-color);
     color: white;
     border: none;
@@ -115,6 +115,6 @@ input[type="submit" i]{
     transition: background-color 0.3s ease;
 }
 
-input[type="submit" i]:hover {
+button:hover {
     background-color: #032539;
 }

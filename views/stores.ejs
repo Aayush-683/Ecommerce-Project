@@ -111,7 +111,7 @@
               </h2>
               <div class="product-list">
                 <% for (let j=0; j < stores[i].products.length; j++) { %>
-                  <a href="#" class="product-card">
+                  <a href="/product/<%= stores[i].products[j].id %>" class="product-card">
                     <img src="<%= stores[i].products[j].image %>" alt="<%= stores[i].products[j].name %>" />
                     <h3>
                       <%= stores[i].products[j].name %>
