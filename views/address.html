@@ -4,87 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Flipkart Style</title>
-    <style>
-        /* Define colors */
-        :root {
-            --primary-color: #FA991C;
-            --secondary-color: #FBF3F2;
-            --accent-color: #1C768F;
-            --dark-color: #032539;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--secondary-color);
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .label {
-            font-weight: bold;
-            color: var(--dark-color);
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .radio-label {
-            margin-right: 20px;
-            color: var(--dark-color);
-        }
-
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .buttons button {
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .buttons button:hover {
-            background-color: var(--accent-color);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .temp-message {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-        }
-    </style>
+    <title>Address Details</title>
+    <link rel="stylesheet" href="/public/css/address.css">
 </head>
 
 <body>
 
-    <div class="container" id="checkoutForm">
+    <div class="container-address" id="checkoutForm">
         <h2>Checkout</h2>
         <form>
             <div class="form-group">
@@ -105,7 +31,7 @@
         </form>
     </div>
 
-    <div class="container hidden" id="orderConfirmation">
+    <div class="container-address hidden" id="orderConfirmation">
         <div class="temp-message">
             <h2>Order Placed Successfully!</h2>
             <p>Thank you for your order. Your order details:</p>
