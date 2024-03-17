@@ -1,0 +1,26 @@
+<div class="navbar">
+    <div class="container">
+        <div class="user-info">
+            <span>Welcome, Username</span>
+            <span>Your Location</span>
+        </div>
+        <div class="nav-links">
+            <a href="/home">Home</a>
+            <a href="/stores">Stores</a>
+            <% if (req.session.seller) { %>
+                <a href="/manager/store">Manage Store </a>
+            <% } else if (req.session.admin) { %>
+                <a href="/manage/store">Manage Store </a>
+                <a href="/manage/user">Manage User</a>
+            <% } %>
+            <% if (req.session.username) { %>    
+                <a href="/cart">Cart</a>
+                <a href="/profile">Profile</a>
+                <a href="/logout">Logout</a>
+            <% } else { %>
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            <% } %>
+        </div>
+    </div>
+</div>

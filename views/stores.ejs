@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Page</title>
+    <style>
+      /* Define colors */
+      :root {
+        --primary-color: #fa991c;
+        --secondary-color: #fbf3f2;
+        --accent-color: #1c768f;
+        --dark-color: #032539;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Navbar */
+      .navbar {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        padding: 10px;
+      }
+
+      .navbar .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        a {
+          text-decoration: none;
+          color: var(--secondary-color);
+          padding: 10px 20px;
+        }
+      }
+
+      .nav-links {
+        list-style-type: none;
+        margin: 0;
+        display: flex;
+      }
+
+      .nav-links a {
+        margin: 0 10px;
+        text-decoration: none;
+        color: white;
+        transition: color 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: #fa991c;
+      }
+
+      /* Container */
+
+      .container {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .sidebar {
+        flex: 0 0 15%;
+        background-color: #f4f4f4;
+        border-right: 1px solid #ddd;
+        position: sticky; /* Make the sidebar sticky */
+        top: 0; /* Stick it to the top of the container */
+        height: 100vh; /* Set height to full viewport height */
+        overflow-y: auto; /* Add scrollbar if content overflows */
+      }
+
+      .content {
+        flex: 0 0 80%;
+        padding: 20px;
+      }
+
+      /* Filter Container Styles */
+      .filter-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .filter-container h2 {
+        margin-bottom: 10px;
+        font-size: 20px;
+        color: #1c768f;
+      }
+
+      .filter {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+      }
+
+      .filter label {
+        display: block;
+        margin-bottom: 5px;
+        color: #032539;
+      }
+
+      .filter select,
+      .filter input[type="range"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+
+      .filter input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: calc(100% - 20px);
+        margin-top: 5px;
+      }
+
+      .filter input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: #fa991c;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+
+      .filter input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: #fa991c;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+
+      .filter input[type="range"]::-webkit-slider-runnable-track {
+        height: 5px;
+        background: #1c768f;
+        border-radius: 5px;
+      }
+
+      .filter input[type="range"]::-moz-range-track {
+        height: 5px;
+        background: #1c768f;
+        border-radius: 5px;
+      }
+
+      #price-value {
+        display: inline-block;
+        margin-left: 5px;
+      }
+
+      .apply-btn {
+        background-color: #fa991c;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .apply-btn:hover {
+        background-color: #1c768f;
+      }
+
+      input[type="radio"] {
+        display: none;
+        /* Hide the radio buttons */
+      }
+
+      input[type="radio"] + label {
+        display: inline-block;
+        margin-right: 10px;
+        /* Adjust spacing between radio button and label */
+        cursor: pointer;
+      }
+
+      /* Style for selected radio button */
+      input[type="radio"]:checked + label {
+        font-weight: bold;
+        /* Make the label bold when the radio button is selected */
+        color: blue;
+        /* Change color of the label when the radio button is selected */
+      }
+
+      /* Store Styles */
+      .stores {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .store {
+        background-color: #f4f4f4;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        width: 29%;
+      }
+
+      .store h3 {
+        margin-bottom: 10px;
+        font-size: 20px;
+        color: #1c768f;
+      }
+
+      .store img {
+        width: 100%;
+        height: 180px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+      }
+
+      .store p {
+        color: #032539;
+      }
+
+      /* Popup Overlay Styles */
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+
+      .overlay-content {
+        position: relative;
+        margin: 5% auto;
+        /* Adjusted for better centering */
+        padding: 20px;
+        width: 90%;
+        /* Adjusted for better display */
+        max-width: 1200px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-sizing: border-box;
+        /* Added to include padding in width calculation */
+        overflow-y: auto;
+        /* Added to show scrollbar */
+        max-height: 80%;
+        /* Added to limit the height of the popup */
+        scrollbar-width: thin;
+        /* For Firefox */
+        scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1);
+        /* For Firefox */
+      }
+
+      .overlay-content::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      .overlay-content::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+      }
+
+      .overlay-content::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+      }
+
+      /* Product Card Styles */
+      .product-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      .product-card {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .product-card img {
+        width: 100%;
+        /* Set width to 100% */
+        height: 150px;
+        /* Set a fixed height */
+        object-fit: cover;
+        /* Maintain aspect ratio and cover the entire space */
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+
+      a {
+        color: inherit;
+        /* Inherit text color from parent */
+        text-decoration: none;
+        /* Remove underline */
+        display: block;
+        /* Make the entire card clickable */
+      }
+    </style>
+  </head>
+
+  <body>
+    <%- include('partials/nav') %>
+    <div class="container">
+      <div class="sidebar">
+        <div class="filter-container">
+          <h2>Filter Options</h2>
+
+          <div class="filter">
+            <label><strong>Sort By:</strong></label>
+            <input type="radio" id="sort_1" name="sort-by" value="1" <% if
+            (sortBy == 1) { %> checked <% } %>>
+            <label for="sort_1">Featured</label>
+
+            <input type="radio" id="sort_2" name="sort-by" value="2" <% if
+            (sortBy == 2) { %> checked <% } %>>
+            <label for="sort_2">Distance ⬆</label>
+
+            <input type="radio" id="sort_3" name="sort-by" value="3" <% if
+            (sortBy == 3) { %> checked <% } %>>
+            <label for="sort_3">Distance ⬇</label>
+          </div>
+          <div class="filter">
+            <label> <strong>Range:</strong></label>
+            <input type="radio" id="d1" name="distance" value="0" <% if
+            (distance == 0) { %> checked <% } %>>
+            <label for="d1">ALL</label>
+
+            <input type="radio" id="d2" name="distance" value="10" <% if
+            (distance == 10) { %> checked <% } %>>
+            <label for="d2">10 KM</label>
+
+            <input type="radio" id="d3" name="distance" value="50" <% if
+            (distance == 50) { %> checked <% } %>>
+            <label for="d3">50 KM</label>
+
+            <input type="radio" id="d4" name="distance" value="100" <% if
+            (distance == 100) { %> checked <% } %>>
+            <label for="d4">100 KM</label>
+          </div>
+          <button class="apply-btn" onclick="applyFilters()">
+            Apply Filters
+          </button>
+        </div>
+      </div>
+      <div class="content">
+        <h1>Your Favourite Stores</h1>
+        <div class="stores">
+          <div class="store" onclick="openPopup()">
+            <h3>Store Name 1</h3>
+            <img src="/images/slider1.jpg" alt="" />
+            <p>Location: Store Location 1</p>
+          </div>
+          <div class="store">
+            <h3>Store Name 2</h3>
+            <img src="/images/slider2.jpg" alt="" />
+            <p>Location: Store Location 2</p>
+          </div>
+          <div class="store">
+            <h3>Store Name 3</h3>
+            <img src="/images/slider3.jpg" alt="" />
+            <p>Location: Store Location 3</p>
+          </div>
+          <% for (let i = 0; i < stores.length; i++) { %>
+          <div class="store" onclick="openPopup('<%= i %>')">
+            <h3><%= stores[i].name %></h3>
+            <img src="<%= stores[i].image %>" alt="" />
+            <p>Location: <%= stores[i].coordinates %></p>
+          </div>
+          <% } %>
+        </div>
+
+        <div id="popup" class="overlay">
+          <div class="overlay-content">
+            <span class="close-btn" onclick="closePopup()">X</span>
+            <h2>Products</h2>
+            <div class="product-list">
+              <a href="#" class="product-card">
+                <img src="/images/slider1.jpg" alt="Product 1" />
+                <h3>Product 1</h3>
+                <p>Price</p>
+                <p>Description of Product 1.</p>
+              </a>
+              <a href="#" class="product-card">
+                <img src="/images/slider2.jpg" alt="Product 2" />
+                <h3>Product 2</h3>
+                <p>Price</p>
+                <p>Description of Product 2.</p>
+              </a>
+              <a href="#" class="product-card">
+                <img src="/images/slider3.jpg" alt="Product 3" />
+                <h3>Product 3</h3>
+                <p>Price</p>
+                <p>Description of Product 3.</p>
+              </a>
+              <!-- Add more product cards as needed -->
+            </div>
+          </div>
+        </div>
+        <% for (let i = 0; i < stores.length; i++) { %>
+        <div id="popup_<%= i %>" class="overlay">
+          <div class="overlay-content">
+            <span class="close-btn" onclick="closePopup('<%= i %>')">X</span>
+            <h2><%= stores[i].name %></h2>
+            <div class="product-list">
+              <% for (let j = 0; j < stores[i].products.length; j++) { %>
+              <a href="#" class="product-card">
+                <img
+                  src="<%= stores[i].products[j].image %>"
+                  alt="<%= stores[i].products[j].name %>"
+                />
+                <h3><%= stores[i].products[j].name %></h3>
+                <p>Price: <%= stores[i].products[j].price %></p>
+                <p><%= stores[i].products[j].description %></p>
+              </a>
+              <% } %>
+            </div>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <script>
+      async function applyFilters() {
+        const sortBy = document.querySelector(
+          'input[name="sort-by"]:checked'
+        ).value;
+        const distance = document.querySelector(
+          'input[name="distance"]:checked'
+        ).value;
+
+        window.location.href = `/stores?sortBy=${sortBy}&distance=${distance}`;
+      }
+
+      function openPopup(id) {
+        document.getElementById(`popup_${id}`).style.display = "block";
+      }
+
+      function closePopup(id) {
+        document.getElementById(`popup_${id}`).style.display = "none";
+      }
+    </script>
+  </body>
+</html>

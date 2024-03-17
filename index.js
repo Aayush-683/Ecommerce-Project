@@ -14,7 +14,9 @@ app.use(session({
     secret: '4pOGPX5C6Wxs5YeAMImC0jk3iRBCIMQctJyoz4oz',
     resave: true,
     saveUninitialized: false,
-    cookie: { maxAge: 60000000 }
+    cookie: { maxAge: 60000000 },
+    rolling: true,
+    name: 'session'
 }));
 
 app.get('/', (req, res) => {
@@ -22,10 +24,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-    // const username = req.session.username;
-    // if (username) {
-        res.render('home');
-    // }
+    res.render('home', { req: req });
 });
 
 app.get('/login', (req, res) => {
@@ -47,7 +46,7 @@ app.get('/login', (req, res) => {
                     break;
             }
         }
-        res.render('login', { msg });
+        res.render('login', { msg, req: req });
     }
 });
 
@@ -61,6 +60,18 @@ app.post('/login', async (req, res) => {
             let check = await db.get(`users.${username}`);
             if (check && check.password === password) {
                 req.session.username = username;
+                if (check.accountType === 'admin') {
+                    req.session.admin = true;
+                } else {
+                    req.session.admin = false;
+                }
+                if (check.accountType === 'seller') {
+                    req.session.seller = true;
+                } else {
+                    req.session.seller = false;
+                }
+                // Save session to cookie so user can stay logged in
+                req.session.save();
                 res.redirect('/home');
             } else {
                 res.redirect('/login?error=1');
@@ -96,7 +107,7 @@ app.get('/register', (req, res) => {
                     break;
             }
         }
-        res.render('register', { msg });
+        res.render('register', { msg, req: req });
     }
 });
 
@@ -124,13 +135,107 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.get('/stores', (req, res) => {
-    const username = req.session.username;
+app.get('/stores', async (req, res) => {
+    let { sortBy, distance } = req.query;
+    if (!sortBy) sortBy = 1
+    else sortBy = parseInt(sortBy); // 1, 2, 3 (random, ascending, descending)
+    if (!distance) distance = 0
+    else distance = parseInt(distance); // 10, 50, 100 (km)
+    let stores = await db.get('stores') || [
+        {
+            name: 'Store 1',
+            coordinates: '1,1',
+            products: [
+                {
+                    name: 'Product 1',
+                    price: 100
+                },
+                {
+                    name: 'Product 2',
+                    price: 200
+                }
+            ]
+        },
+        {
+            name: 'Store 2',
+            coordinates: '2,2',
+            products: [
+                {
+                    name: 'Product 1',
+                    price: 100
+                },
+                {
+                    name: 'Product 2',
+                    price: 200
+                }
+            ]
+        },
+        {
+            name: 'Store 3',
+            coordinates: '3,3',
+            products: [
+                {
+                    name: 'Product 1',
+                    price: 100
+                },
+                {
+                    name: 'Product 2',
+                    price: 200
+                }
+            ]
+        }
+    ]
+    let username = req.session.username;
     if (username) {
-        res.render('stores');
+        let user = await db.get(`users.${username}`);
+        let coordinates = user.coordinates;
+        if (coordinates) {
+            let [lat, lon] = coordinates.split(',');
+            // Filter stores by distance based on get parameter
+            if (distance > 0) {
+                stores = stores.filter(store => {
+                    let [storeLat, storeLon] = store.coordinates.split(',');
+                    // Calculate distance between user and store based on coordinates using euclidean distance
+                    let dis = Math.sqrt((storeLat - lat) ** 2 + (storeLon - lon) ** 2);
+                    dis = Math.floor(dis / 10);
+                    store.distance = dis;
+                    // console.log(dis, distance, dis <= distance)
+                    return dis <= distance;
+                });
+            }
+            stores = stores.sort((a, b) => {
+                switch (sortBy) {
+                    case 2:
+                        return b.distance - a.distance;
+                    case 3:
+                        return a.distance - b.distance;
+                    default:
+                        return Math.random() - 0.5;
+                }
+            });
+        } else {
+            stores = stores.sort((a, b) => {
+                if (sortBy === 2) {
+                    return a.name.localeCompare(b.name);
+                } else if (sortBy === 3) {
+                    return b.name.localeCompare(a.name);
+                } else {
+                    return Math.random() - 0.5;
+                }
+            });
+        }
     } else {
-        res.redirect('/login');
+        stores = stores.sort((a, b) => {
+            if (sortBy === 2) {
+                return a.name.localeCompare(b.name);
+            } else if (sortBy === 3) {
+                return b.name.localeCompare(a.name);
+            } else {
+                return Math.random() - 0.5;
+            }
+        });
     }
+    res.render('stores', { stores, sortBy, distance, req: req });
 });
 
 app.listen(port, () => {
