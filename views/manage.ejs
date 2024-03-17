@@ -49,13 +49,6 @@
 
         <div class="profile" id="viewStore" style="display: none;">
             <h1>View Store</h1><hr>
-            <div class="store">
-                <h2>Store #001</h2>
-                <p><strong>Store Name:</strong> Store Name</p>
-                <p><strong>Store ID:</strong> 001</p>
-                <p><strong>Coordinates:</strong> 123 Main St, Cityville, Country</p>
-                <p><strong>Image URL:</strong> URL</p>
-            </div>
             <% for (let i = 0; i < stores.length; i++) { %>
                 <div class="store">
                     <h2>Store #<%= stores[i].id %></h2>
@@ -99,8 +92,10 @@
         <div class="profile" id="removeProduct" style="display: none;">
             <h1>Remove Product</h1><hr>
             <form action="/removeProduct" method="post">
-                <label for="product_id">Product ID:</label>
-                <input type="text" id="product_id" name="product_id" value="prod123"><br><br>
+                <label for="store">Store ID:</label>
+                <input type="text" id="store" name="store" value="xyz123" required><br><br>
+                <label for="product">Product ID:</label>
+                <input type="text" id="product" name="product" value="prod123" required><br><br>
                 <input type="submit" value="Remove">
             </form>
         </div>

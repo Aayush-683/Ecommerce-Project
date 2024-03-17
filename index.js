@@ -325,6 +325,9 @@ app.get('/manage', async (req, res) => {
                 case '3':
                     msg = 'Profile with that Username already exists';
                     break;
+                case '4':
+                    msg = 'Store not found';
+                    break;
                 default:
                     break;
             }
@@ -418,7 +421,8 @@ app.post('/removeProduct', async (req, res) => {
         }
         let { store, product } = req.body;
         let stores = await db.get('stores') || [];
-        let check = stores.find(s => s.name === store);
+        let check = stores.find(s => s.id === store);
+        if (!check) return res.redirect('/manage?error=4')
         if (check.seller === username || req.session.admin) {
             check.products = check.products.filter(p => p.name !== product);
             await db.set('stores', stores);
@@ -472,8 +476,12 @@ app.get('/product/:id', async (req, res) => {
 app.get('/cart', async (req, res) => {
     let username = req.session.username;
     if (username) {
-        let cart = await db.get(`cart.${username}`) || [];
-        res.render('cart', { cart, req: req });
+        let cart = await db.get(`cart.${username}`) || []
+        let total = 0;
+        cart.forEach(element => {
+            total += element.price * element.quantity;
+        });
+        res.render('cart', { products: cart, req: req, total });
     } else {
         res.redirect('/login');
     }
@@ -482,7 +490,7 @@ app.get('/cart', async (req, res) => {
 app.post('/cart', async (req, res) => {
     let username = req.session.username;
     if (username) {
-        let { store, productId, buyNow } = req.body;
+        let { store, productId, buyNow, price, image, name } = req.body;
         let cart = await db.get(`cart.${username}`) || [];
         // Check if product is from the same store
         let check = cart[0] ? cart[0].store === store : true;
@@ -496,19 +504,75 @@ app.post('/cart', async (req, res) => {
                 quantity = check2.quantity + 1;
                 cart = cart.filter(p => p.productId !== productId);
             }
-            let product = { productId, quantity };
+            let product = { productId, quantity, price, image, store, name };
             cart.push(product);
             await db.set(`cart.${username}`, cart);
             if (buyNow == 'true') {
                 res.redirect('/checkout');
             } else {
-                res.redirect(`/prodcut/${productId}?success=1`);
+                res.redirect(`/product/${productId}?success=1`);
             }
         }
     } else {
         res.redirect('/login');
     }
 });
+
+app.get('/removeCart', async (req, res) => {
+    let username = req.session.username;
+    if (username) {
+        let productId = req.query.productId;
+        let cart = await db.get(`cart.${username}`) || [];
+        cart = cart.filter(p => p.productId === productId);
+        await db.set(`cart.${username}`, cart);
+        res.redirect('/cart');
+    } else {
+        res.redirect('/login');
+    }
+})
+
+app.get('/checkout', async (req, res) => {
+    let username = req.session.username;
+    if (username) {
+        let cart = await db.get(`cart.${username}`) || [];
+        let total = 0;
+        cart.forEach(element => {
+            total += element.price * element.quantity;
+        });
+        res.render('checkout', { products: cart, req: req, total, order: false });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+app.post('/checkout', async (req, res) => {
+    const username = req.session.username;
+    if (!username) return res.sendStatus(403).send("Forbidden")
+    let cart = await db.get(`cart.${username}`) || [];
+    if (!cart) return res.redirect("/cart?error=1")
+    let { address, payment } = req.body;
+    let total = 0;
+    let pods = []
+    let store = cart[0].store;
+    cart.forEach(element => {
+        total += element.price * element.quantity;
+        pods.push(element.name);
+    });
+    let date = new Date();
+    // Format date into human readable form
+    date = date.toISOString().split('T')[0];
+    let order = { address, payment, store, total, products: pods, date: date };
+    let orders = await db.get(`orders.${username}`) || [];
+    orders.push(order);
+    await db.set(`orders.${username}`, orders);
+    await db.delete(`cart.${username}`);
+    res.render('checkout', { products: cart, req: req, total, order });
+});
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/home');
+})
 
 app.listen(port, () => {
     console.log(`Server running on port http://localhost:${port}`);

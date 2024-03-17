@@ -10,146 +10,138 @@
 
 <body>
   <%- include('partials/nav') %>
-    <div class="container">
-      <div class="sidebar">
-        <div class="filter-container">
-          <h2>Filter Options</h2>
+  <div class="container">
+    <div class="sidebar">
+      <div class="filter-container">
+        <h2>Filter Options</h2>
 
-          <div class="filter">
-            <label><strong>Sort By:</strong></label>
-            <input type="radio" id="sort_1" name="sort-by" value="1" <% if (sortBy==1) { %> checked <% } %>>
-              <label for="sort_1">Featured</label>
+        <div class="filter">
+          <label><strong>Sort By:</strong></label>
+          <input type="radio" id="sort_1" name="sort-by" value="1" <% if
+            (sortBy==1) { %> checked <% } %>>
+          <label for="sort_1">Featured</label>
 
-              <input type="radio" id="sort_2" name="sort-by" value="2" <% if (sortBy==2) { %> checked <% } %>>
-                <label for="sort_2">Distance ⬆</label>
+          <input type="radio" id="sort_2" name="sort-by" value="2" <% if
+            (sortBy==2) { %> checked <% } %>>
+          <label for="sort_2">Distance ⬆</label>
 
-                <input type="radio" id="sort_3" name="sort-by" value="3" <% if (sortBy==3) { %> checked <% } %>>
-                  <label for="sort_3">Distance ⬇</label>
-          </div>
-          <div class="filter">
-            <label> <strong>Range:</strong></label>
-            <input type="radio" id="d1" name="distance" value="0" <% if (distance==0) { %> checked <% } %>>
-              <label for="d1">ALL</label>
-
-              <input type="radio" id="d2" name="distance" value="10" <% if (distance==10) { %> checked <% } %>>
-                <label for="d2">10 KM</label>
-
-                <input type="radio" id="d3" name="distance" value="50" <% if (distance==50) { %> checked <% } %>>
-                  <label for="d3">50 KM</label>
-
-                  <input type="radio" id="d4" name="distance" value="100" <% if (distance==100) { %> checked <% } %>>
-                    <label for="d4">100 KM</label>
-          </div>
-          <button class="apply-btn" onclick="applyFilters()">
-            Apply Filters
-          </button>
+          <input type="radio" id="sort_3" name="sort-by" value="3" <% if
+            (sortBy==3) { %> checked <% } %>>
+          <label for="sort_3">Distance ⬇</label>
         </div>
-      </div>
-      <div class="content">
-        <h1>Your Favourite Stores</h1>
-        <div class="stores">
-          <div class="store" onclick="openPopup()">
-            <h3>Store Name 1</h3>
-            <img src="/images/slider1.jpg" alt="" />
-            <p>Location: Store Location 1</p>
-          </div>
-          <div class="store">
-            <h3>Store Name 2</h3>
-            <img src="/images/slider2.jpg" alt="" />
-            <p>Location: Store Location 2</p>
-          </div>
-          <div class="store">
-            <h3>Store Name 3</h3>
-            <img src="/images/slider3.jpg" alt="" />
-            <p>Location: Store Location 3</p>
-          </div>
-          <% for (let i=0; i < stores.length; i++) { %>
-            <div class="store" onclick="openPopup('<%= i %>')">
-              <h3>
-                <%= stores[i].name %>
-              </h3>
-              <img src="<%= stores[i].image %>" alt="" />
-              <p>Location: <%= stores[i].coordinates %>
-              </p>
-            </div>
-            <% } %>
-        </div>
+        <div class="filter">
+          <label> <strong>Range:</strong></label>
+          <input type="radio" id="d1" name="distance" value="0" <% if
+            (distance==0) { %> checked <% } %>>
+          <label for="d1">ALL</label>
 
-        <div id="popup" class="overlay">
-          <div class="overlay-content">
-            <span class="close-btn" onclick="closePopup()">X</span>
-            <h2>Products</h2>
-            <div class="product-list">
-              <a href="#" class="product-card">
-                <img src="/images/slider1.jpg" alt="Product 1" />
-                <h3>Product 1</h3>
-                <p>Price</p>
-                <p>Description of Product 1.</p>
-              </a>
-              <a href="#" class="product-card">
-                <img src="/images/slider2.jpg" alt="Product 2" />
-                <h3>Product 2</h3>
-                <p>Price</p>
-                <p>Description of Product 2.</p>
-              </a>
-              <a href="#" class="product-card">
-                <img src="/images/slider3.jpg" alt="Product 3" />
-                <h3>Product 3</h3>
-                <p>Price</p>
-                <p>Description of Product 3.</p>
-              </a>
-              <!-- Add more product cards as needed -->
-            </div>
-          </div>
+          <input type="radio" id="d2" name="distance" value="10" <% if
+            (distance==10) { %> checked <% } %>>
+          <label for="d2">10 KM</label>
+
+          <input type="radio" id="d3" name="distance" value="50" <% if
+            (distance==50) { %> checked <% } %>>
+          <label for="d3">50 KM</label>
+
+          <input type="radio" id="d4" name="distance" value="100" <% if
+            (distance==100) { %> checked <% } %>>
+          <label for="d4">100 KM</label>
         </div>
-        <% for (let i=0; i < stores.length; i++) { %>
-          <div id="popup_<%= i %>" class="overlay">
-            <div class="overlay-content">
-              <span class="close-btn" onclick="closePopup('<%= i %>')">X</span>
-              <h2>
-                <%= stores[i].name %>
-              </h2>
-              <div class="product-list">
-                <% for (let j=0; j < stores[i].products.length; j++) { %>
-                  <a href="/product/<%= stores[i].products[j].id %>" class="product-card">
-                    <img src="<%= stores[i].products[j].image %>" alt="<%= stores[i].products[j].name %>" />
-                    <h3>
-                      <%= stores[i].products[j].name %>
-                    </h3>
-                    <p>Price: <%= stores[i].products[j].price %>
-                    </p>
-                    <p>
-                      <%= stores[i].products[j].description %>
-                    </p>
-                  </a>
-                  <% } %>
-              </div>
-            </div>
-          </div>
-          <% } %>
+        <button class="apply-btn" onclick="applyFilters()">
+          Apply Filters
+        </button>
       </div>
     </div>
+    <div class="content">
+      <h1>Your Favourite Stores</h1>
+      <div class="stores">
+        <!-- <div class="store" onclick="openPopup()">
+          <h3>Store Name 1</h3>
+          <img src="/images/slider1.jpg" alt="" />
+          <p>Location: Store Location 1</p>
+        </div>
+        <div class="store">
+          <h3>Store Name 2</h3>
+          <img src="/images/slider2.jpg" alt="" />
+          <p>Location: Store Location 2</p>
+        </div> -->
+        <% for (let i=0; i < stores.length; i++) { %>
+          <div class="store" onclick="openPopup('<%= i %>')">
+            <h3><%= stores[i].name %></h3>
+            <img src="<%= stores[i].url %>" alt="" />
+            <p>Location: <%= stores[i].coordinates %></p>
+          </div>
+        <% } %>
+      </div>
 
-    <script>
-      async function applyFilters() {
-        const sortBy = document.querySelector(
-          'input[name="sort-by"]:checked'
-        ).value;
-        const distance = document.querySelector(
-          'input[name="distance"]:checked'
-        ).value;
+      <!-- <div id="popup" class="overlay">
+        <div class="overlay-content">
+          <span class="close-btn" onclick="closePopup()">X</span>
+          <h2>Products</h2>
+          <div class="product-list">
+            <a href="#" class="product-card">
+              <img src="/images/slider1.jpg" alt="Product 1" />
+              <h3>Product 1</h3>
+              <p>Price</p>
+              <p>Description of Product 1.</p>
+            </a>
+            <a href="#" class="product-card">
+              <img src="/images/slider2.jpg" alt="Product 2" />
+              <h3>Product 2</h3>
+              <p>Price</p>
+              <p>Description of Product 2.</p>
+            </a>
+            <a href="#" class="product-card">
+              <img src="/images/slider3.jpg" alt="Product 3" />
+              <h3>Product 3</h3>
+              <p>Price</p>
+              <p>Description of Product 3.</p>
+            </a>
+            <!-- Add more product cards as needed -->
+          </div>
+        </div>
+      </div> -->
+      <% for (let i=0; i < stores.length; i++) { %>
+      <div id="popup_<%= i %>" class="overlay">
+        <div class="overlay-content">
+          <span class="close-btn" onclick="closePopup('<%= i %>')">X</span>
+          <h2><%= stores[i].name %></h2>
+          <div class="product-list">
+            <% for (let j=0; j < stores[i].products.length; j++) { %>
+            <a href="/product/<%= stores[i].products[j].id %>" class="product-card">
+              <img src="<%= stores[i].products[j].image %>" alt="<%= stores[i].products[j].name %>" />
+              <h3><%= stores[i].products[j].name %></h3>
+              <p>Price: <%= stores[i].products[j].price %></p>
+              <p><%= stores[i].products[j].description %></p>
+            </a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
 
-        window.location.href = `/stores?sortBy=${sortBy}&distance=${distance}`;
-      }
+  <script>
+    async function applyFilters() {
+      const sortBy = document.querySelector(
+        'input[name="sort-by"]:checked'
+      ).value;
+      const distance = document.querySelector(
+        'input[name="distance"]:checked'
+      ).value;
 
-      function openPopup(id) {
-        document.getElementById(`popup_${id}`).style.display = "block";
-      }
+      window.location.href = `/stores?sortBy=${sortBy}&distance=${distance}`;
+    }
 
-      function closePopup(id) {
-        document.getElementById(`popup_${id}`).style.display = "none";
-      }
-    </script>
+    function openPopup(id) {
+      document.getElementById(`popup_${id}`).style.display = "block";
+    }
+
+    function closePopup(id) {
+      document.getElementById(`popup_${id}`).style.display = "none";
+    }
+  </script>
 </body>
 
 </html>

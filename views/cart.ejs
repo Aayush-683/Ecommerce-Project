@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="/css/cart.css" />
+  </head>
+
+  <body>
+    <%- include('partials/nav') %>
+
+    <div class="container-cart">
+      <h1>Your Cart</h1>
+      <ul class="cart-items">
+        <% for (let i = 0; i < products.length; i++) { %>
+            <li class="cart-item">
+            <img src="<%= products[i].image %>" alt="Product Image" />
+            <div class="cart-item-details">
+                <div class="cart-item-title"><%= products[i].name %></div>
+                <div class="cart-item-price">Price: $<%= products[i].price %></div>
+                <div class="cart-item-quantity">Quantity: <%= products[i].quantity %></div>
+            </div>
+            <div class="cart-item-remove"><a href="/removeCart?id=<%= products[i].productId %>">Remove</a></div>
+            </li>
+        <% } %>
+      </ul>
+      <div class="cart-total">Total: $<%= total %></div>
+      <div class="cart-actions">
+        <a href="/checkout"><button>Proceed to Checkout</button></a>
+      </div>
+    </div>
+  </body>
+</html>
