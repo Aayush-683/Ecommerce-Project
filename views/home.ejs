@@ -18,9 +18,11 @@
             </div>
             <div class="nav-links">
                 <a href="#">Home</a>
-                <a href="#">Stores</a>
+                <a href="/overlay.html">Stores</a>
                 <a href="#">Cart</a>
                 <a href="#">Profile</a>
+                <a href="#">Manage Store </a>
+                <a href="#">Manage User</a>
             </div>
         </div>
     </div>
@@ -55,51 +57,56 @@
     <!-- Stores Section -->
     <div class="stores">
         <!-- Sample Store Cards -->
-            <div class="store" onclick="openOverlay('Store Name 1', 'Location 1')">
-                <h3>Store Name 1</h3>
-                <img src="/images/slider1.jpg" alt="">
-                <p>Location: Store Location 1</p>
-                <!-- Additional Store Details and Products -->
-            </div>
-        <a href="">
-            <div class="store">
-                <h3>Store Name 2</h3>
-                <img src="/images/slider2.jpg" alt="">
-                <p>Location: Store Location 2</p>
-                <!-- Additional Store Details and Products -->
-            </div>
-        </a>
-        <a href="">
-            <div class="store">
-                <h3>Store Name 3</h3>
-                <img src="/images/slider3.jpg" alt="">
-                <p>Location: Store Location 3</p>
-                <!-- Additional Store Details and Products -->
-            </div>
-        </a>
+        <div class="store" onclick="openPopup()">
+            <h3>Store Name 1</h3>
+            <img src="/images/slider1.jpg" alt="">
+            <p>Location: Store Location 1</p>
+            <!-- Additional Store Details and Products -->
+        </div>
+        <div class="store" onclick="openPopup()">
+            <h3>Store Name 2</h3>
+            <img src="/images/slider2.jpg" alt="">
+            <p>Location: Store Location 2</p>
+            <!-- Additional Store Details and Products -->
+        </div>
+        <div class="store" onclick="openPopup()">
+            <h3>Store Name 3</h3>
+            <img src="/images/slider3.jpg" alt="">
+            <p>Location: Store Location 3</p>
+            <!-- Additional Store Details and Products -->
+        </div>
     </div>
-<div id="overlay" class="overlay" onclick="closeOverlay()">
-    <div class="overlay-content">
-        <span class="close-btn">&times;</span>
-        <h2 id="store-name"></h2>
-        <p id="store-location"></p>
-        <!-- Additional Store Details and Products -->
-        <!-- You can dynamically add content here using JavaScript -->
+
+    <div id="popup" class="overlay">
+        <div class="overlay-content">
+            <span class="close-btn" onclick="closePopup()">X</span>
+            <h2>Products</h2>
+            <div class="product-list">
+                <a href="#" class="product-card">
+                    <img src="/images/slider1.jpg" alt="Product 1">
+                    <h3>Product 1</h3>
+                    <p>Price </p>
+                    <p>Description of Product 1.</p>
+                </a>
+                <a href="#" class="product-card">
+                    <img src="/images/slider2.jpg" alt="Product 2">
+                    <h3>Product 2</h3>
+                    <p>Price </p>
+                    <p>Description of Product 2.</p>
+                </a>
+                <a href="#" class="product-card">
+                    <img src="/images/slider3.jpg" alt="Product 3">
+                    <h3>Product 3</h3>
+                    <p>Price </p>
+                    <p>Description of Product 3.</p>
+                </a>
+                <!-- Add more product cards as needed -->
+            </div>
+        </div>
     </div>
-</div>
+
     <script>
-        function openOverlay(name, location) {
-                document.getElementById('store-name').innerText = name;
-                document.getElementById('store-location').innerText = "Location: " + location;
-                document.getElementById('overlay').style.display = "block";
-            }
 
-            function closeOverlay() {
-                document.getElementById('overlay').style.display = "none";
-            }
-
-            // Close overlay when clicking close button
-            document.querySelector('.close-btn').addEventListener('click', closeOverlay);
 
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
@@ -129,6 +136,19 @@
 
         // Auto slide change every 4 seconds
         setInterval(nextSlide, 4000);
+
+
+
+        // Popup
+        function openPopup() {
+            document.getElementById("popup").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+
+
     </script>
 </body>
 

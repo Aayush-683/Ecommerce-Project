@@ -14,7 +14,7 @@ app.use(session({
     secret: '4pOGPX5C6Wxs5YeAMImC0jk3iRBCIMQctJyoz4oz',
     resave: true,
     saveUninitialized: false,
-    cookie: { maxAge: 60000 }
+    cookie: { maxAge: 60000000 }
 }));
 
 app.get('/', (req, res) => {
@@ -22,12 +22,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-    const username = req.session.username;
-    if (username) {
+    // const username = req.session.username;
+    // if (username) {
         res.render('home');
-    } else {
-        res.redirect('/login');
-    }
+    // }
 });
 
 app.get('/login', (req, res) => {
