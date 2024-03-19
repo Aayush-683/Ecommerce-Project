@@ -1,6 +1,7 @@
 # E-Commerce Website README
 
 Welcome to our E-Commerce Website! Below you'll find all the essential information to get started with our platform.
+(may contain bugs, i was only responsible for backend coding)
 
 ## Table of Contents
 
